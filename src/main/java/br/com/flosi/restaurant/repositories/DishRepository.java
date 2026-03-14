@@ -1,9 +1,9 @@
 package br.com.flosi.restaurant.repositories;
 
-import br.com.flosi.restaurant.models.MenuItem;
+import br.com.flosi.restaurant.models.Dish;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
+public interface DishRepository extends JpaRepository<Dish, Long> {
 }

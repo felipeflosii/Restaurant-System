@@ -1,6 +1,6 @@
 package br.com.flosi.restaurant.models;
 
-public enum MenuCategory {
+public enum DishCategory {
 
     APPETIZER("Appetizer", "Starter dishes served before the main course"),
     SOUP("Soup", "Hot or cold liquid dishes"),
@@ -31,7 +31,7 @@ public enum MenuCategory {
     private final String displayName;
     private final String description;
 
-    MenuCategory(String displayName, String description) {
+    DishCategory(String displayName, String description) {
         this.displayName = displayName;
         this.description = description;
     }
@@ -44,8 +44,8 @@ public enum MenuCategory {
         return description;
     }
 
-    public static MenuCategory fromDisplayName(String value) {
-        for (MenuCategory category : MenuCategory.values()) {
+    public static DishCategory fromDisplayName(String value) {
+        for (DishCategory category : DishCategory.values()) {
             if (category.displayName.equalsIgnoreCase(value)) {
                 return category;
             }

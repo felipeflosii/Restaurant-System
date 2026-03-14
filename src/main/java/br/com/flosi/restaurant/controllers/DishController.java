@@ -1,35 +1,34 @@
 package br.com.flosi.restaurant.controllers;
 
-import br.com.flosi.restaurant.dtos.MenuItemDTO;
-import br.com.flosi.restaurant.models.MenuItem;
-import br.com.flosi.restaurant.services.MenuItemService;
+import br.com.flosi.restaurant.dtos.DishDTO;
+import br.com.flosi.restaurant.models.Dish;
+import br.com.flosi.restaurant.services.DishService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
 import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/menu-items")
-public class MenuItemController {
+public class DishController {
 
-    private final MenuItemService service;
+    private final DishService service;
 
     @PostMapping
-    public ResponseEntity<MenuItem> create(@RequestBody @Valid MenuItemDTO dto) {
+    public ResponseEntity<Dish> create(@RequestBody @Valid DishDTO dto) {
         return ResponseEntity.status(201).body(service.save(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<MenuItem>> getAll() {
+    public ResponseEntity<List<Dish>> getAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MenuItem> getById(@PathVariable Long id) {
+    public ResponseEntity<Dish> getById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
