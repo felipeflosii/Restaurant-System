@@ -1,5 +1,6 @@
 package br.com.flosi.restaurant.dtos;
 
+import br.com.flosi.restaurant.models.RestaurantSpecialty;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -13,5 +14,5 @@ public class RestaurantDTO {
     private String address;
 
     @NotBlank (message = "Required specialty")
-    private  String specialty;
+    private RestaurantSpecialty specialty;
 }
