@@ -1,5 +1,6 @@
 package br.com.flosi.restaurant.models;
 
+import br.com.flosi.restaurant.models.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 

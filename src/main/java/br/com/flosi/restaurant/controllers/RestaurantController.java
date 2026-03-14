@@ -1,7 +1,10 @@
 package br.com.flosi.restaurant.controllers;
 
+import br.com.flosi.restaurant.dtos.DishDTO;
+import br.com.flosi.restaurant.dtos.DishResponseDTO;
 import br.com.flosi.restaurant.dtos.RestaurantDTO;
 import br.com.flosi.restaurant.dtos.RestaurantResponseDTO;
+import br.com.flosi.restaurant.services.DishService;
 import br.com.flosi.restaurant.services.RestaurantService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +19,7 @@ import java.util.List;
 public class RestaurantController {
 
     private final RestaurantService service;
+    private final DishService dishService;
 
     @PostMapping
     public ResponseEntity<RestaurantResponseDTO> create(@RequestBody @Valid RestaurantDTO dto) {
@@ -41,5 +45,16 @@ public class RestaurantController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // HTTP restaurant - dishes
+    @PostMapping("/{id}/dishes")
+    public ResponseEntity<DishResponseDTO> createDish(@PathVariable Long id, @RequestBody @Valid DishDTO dto) {
+        return ResponseEntity.status(201).body(dishService.saveByRestaurant(id, dto));
+    }
+
+    @GetMapping("/{id}/dishes")
+    public ResponseEntity<List<DishResponseDTO>> getDishes(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findDishesByRestaurantId(id));
     }
 }

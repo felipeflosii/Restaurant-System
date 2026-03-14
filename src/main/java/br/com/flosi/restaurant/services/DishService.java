@@ -3,7 +3,9 @@ package br.com.flosi.restaurant.services;
 import br.com.flosi.restaurant.dtos.DishDTO;
 import br.com.flosi.restaurant.dtos.DishResponseDTO;
 import br.com.flosi.restaurant.models.Dish;
+import br.com.flosi.restaurant.models.Restaurant;
 import br.com.flosi.restaurant.repositories.DishRepository;
+import br.com.flosi.restaurant.repositories.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import java.util.List;
 public class DishService {
 
     private final DishRepository repository;
+    private final RestaurantRepository restaurantRepository;
 
     public DishResponseDTO save(DishDTO dto) {
         Dish dish = new Dish();
@@ -21,6 +24,27 @@ public class DishService {
         dish.setDescription(dto.getDescription());
         dish.setCategory(dto.getCategory());
         dish.setPrice(dto.getPrice());
+        repository.save(dish);
+
+        DishResponseDTO response = new DishResponseDTO();
+        response.setId(dish.getId());
+        response.setName(dish.getName());
+        response.setDescription(dish.getDescription());
+        response.setCategory(dish.getCategory());
+        response.setPrice(dish.getPrice());
+        return response;
+    }
+
+    public DishResponseDTO saveByRestaurant(Long restaurantId, DishDTO dto) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+
+        Dish dish = new Dish();
+        dish.setName(dto.getName());
+        dish.setDescription(dto.getDescription());
+        dish.setCategory(dto.getCategory());
+        dish.setPrice(dto.getPrice());
+        dish.setRestaurant(restaurant);
         repository.save(dish);
 
         DishResponseDTO response = new DishResponseDTO();

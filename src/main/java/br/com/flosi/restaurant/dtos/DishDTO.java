@@ -1,6 +1,6 @@
 package br.com.flosi.restaurant.dtos;
 
-import br.com.flosi.restaurant.models.DishCategory;
+import br.com.flosi.restaurant.models.enums.DishCategory;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

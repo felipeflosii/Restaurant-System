@@ -1,6 +1,6 @@
 package br.com.flosi.restaurant.dtos;
 
-import br.com.flosi.restaurant.models.DishCategory;
+import br.com.flosi.restaurant.models.enums.DishCategory;
 import lombok.Data;
 
 import java.math.BigDecimal;

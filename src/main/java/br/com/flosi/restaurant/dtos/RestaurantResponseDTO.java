@@ -1,6 +1,6 @@
 package br.com.flosi.restaurant.dtos;
 
-import br.com.flosi.restaurant.models.RestaurantSpecialty;
+import br.com.flosi.restaurant.models.enums.RestaurantSpecialty;
 import lombok.Data;
 
 @Data

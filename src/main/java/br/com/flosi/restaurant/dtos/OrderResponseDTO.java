@@ -1,6 +1,6 @@
 package br.com.flosi.restaurant.dtos;
 
-import br.com.flosi.restaurant.models.OrderStatus;
+import br.com.flosi.restaurant.models.enums.OrderStatus;
 import lombok.Data;
 
 import java.math.BigDecimal;

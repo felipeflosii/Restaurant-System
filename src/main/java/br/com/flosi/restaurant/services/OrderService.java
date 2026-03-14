@@ -5,7 +5,7 @@ import br.com.flosi.restaurant.dtos.OrderDTO;
 import br.com.flosi.restaurant.dtos.OrderResponseDTO;
 import br.com.flosi.restaurant.models.Dish;
 import br.com.flosi.restaurant.models.Order;
-import br.com.flosi.restaurant.models.OrderStatus;
+import br.com.flosi.restaurant.models.enums.OrderStatus;
 import br.com.flosi.restaurant.repositories.DishRepository;
 import br.com.flosi.restaurant.repositories.OrderRepository;
 import lombok.RequiredArgsConstructor;
