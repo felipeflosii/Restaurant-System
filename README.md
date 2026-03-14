@@ -28,7 +28,8 @@ src/main/java/br/com/flosi/restaurant/
 ├── controllers/        REST controllers (HTTP layer)
 ├── services/           Business logic layer
 ├── repositories/       Spring Data JPA interfaces
-├── models/             JPA entities and enums
+├── models/             JPA entities
+│   └── enums/          Domain enums (DishCategory, OrderStatus, RestaurantSpecialty)
 ├── dtos/               Data Transfer Objects (request/response)
 ├── exceptions/         Global exception handling
 └── security/           Spring Security + JWT (planned)
@@ -43,15 +44,23 @@ src/main/java/br/com/flosi/restaurant/
 | Entity | Description |
 |---|---|
 | Restaurant | Represents a restaurant with name, address, and specialty |
-| MenuItem | A dish offered by a restaurant with name, description, category, and price |
-| Order | A customer order linked to menu items, with a total price and lifecycle status |
+| Dish | A dish offered by a restaurant with name, description, category, and price |
+| Order | A customer order linked to dishes, with an auto-calculated total and lifecycle status |
+
+### Relationships
+
+| Relationship | Type |
+|---|---|
+| Restaurant → Dish | One-to-Many |
+| Order → Dish | Many-to-Many (via `order_items` table) |
 
 ### Enums
 
 | Enum | Values |
 |---|---|
-| MenuCategory | `APPETIZER`, `SOUP`, `SALAD`, `MAIN_COURSE`, `PIZZA`, `PASTA`, `SEAFOOD`, `GRILL`, `VEGETARIAN`, `VEGAN`, `DESSERT`, `BEVERAGE`, `COMBO`, `SPECIAL`, and more |
+| DishCategory | `APPETIZER`, `SOUP`, `SALAD`, `MAIN_COURSE`, `PIZZA`, `PASTA`, `SEAFOOD`, `GRILL`, `VEGETARIAN`, `VEGAN`, `DESSERT`, `BEVERAGE`, `COMBO`, `SPECIAL`, and more |
 | OrderStatus | `CREATED` → `CONFIRMED` → `PREPARING` → `READY` → `OUT_FOR_DELIVERY` → `DELIVERED` / `CANCELLED` / `PAID` |
+| RestaurantSpecialty | `ITALIAN`, `JAPANESE`, `BRAZILIAN`, `MEXICAN`, `CHINESE`, `AMERICAN`, `FRENCH`, `MEDITERRANEAN`, `SEAFOOD`, `VEGETARIAN`, `VEGAN`, `FAST_FOOD`, `PIZZA`, `STEAKHOUSE`, `BAKERY`, `CAFE`, `BUFFET`, `FUSION` |
 
 ---
 
@@ -64,16 +73,20 @@ src/main/java/br/com/flosi/restaurant/
 | GET | `/restaurants` | List all restaurants |
 | GET | `/restaurants/{id}` | Get a restaurant by ID |
 | POST | `/restaurants` | Create a new restaurant |
+| PUT | `/restaurants/{id}` | Update a restaurant |
 | DELETE | `/restaurants/{id}` | Delete a restaurant |
+| GET | `/restaurants/{id}/dishes` | List all dishes of a restaurant |
+| POST | `/restaurants/{id}/dishes` | Create a dish linked to a restaurant |
 
-### Menu Items — `/menu-items`
+### Dishes — `/dishes`
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/menu-items` | List all menu items |
-| GET | `/menu-items/{id}` | Get a menu item by ID |
-| POST | `/menu-items` | Create a new menu item |
-| DELETE | `/menu-items/{id}` | Delete a menu item |
+| GET | `/dishes` | List all dishes |
+| GET | `/dishes/{id}` | Get a dish by ID |
+| POST | `/dishes` | Create a new dish |
+| PUT | `/dishes/{id}` | Update a dish |
+| DELETE | `/dishes/{id}` | Delete a dish |
 
 ### Orders — `/orders`
 
@@ -105,9 +118,20 @@ The API starts on `http://localhost:8080`. The H2 in-memory database is pre-conf
 
 ### Example Requests
 
-**Create a menu item:**
+**Create a restaurant:**
 ```json
-POST /menu-items
+POST /restaurants
+
+{
+  "name": "Bella Italia",
+  "address": "123 Main St",
+  "specialty": "ITALIAN"
+}
+```
+
+**Create a dish linked to a restaurant:**
+```json
+POST /restaurants/1/dishes
 
 {
   "name": "Margherita Pizza",
@@ -122,8 +146,8 @@ POST /menu-items
 POST /orders
 
 {
-  "name": "John Doe",
-  "menuItemIds": [1, 3, 5]
+  "customerName": "John Doe",
+  "dishIds": [1, 3, 5]
 }
 ```
 
@@ -131,18 +155,18 @@ POST /orders
 
 ## Development Roadmap
 
-### Level 1 — Foundation *(in progress)*
-- [x] Basic CRUD for Restaurant, MenuItem, and Order
-- [x] Auto-calculated order total from menu item prices
+### Level 1 — Foundation ✅
+- [x] Basic CRUD for Restaurant, Dish, and Order
+- [x] Auto-calculated order total from dish prices
 - [x] Status automatically set to `CREATED` on order creation
 - [x] DTOs with validation via `@Valid`
 - [x] Global exception handler
-- [ ] Relationships: Restaurant → MenuItems, Order → MenuItems
-- [ ] PUT endpoints for updating Restaurant and MenuItem
-- [ ] Separate response DTOs from request DTOs
-- [ ] Negative price validation on MenuItem
-- [ ] Prevent ordering non-existent items
-- [ ] `POST /restaurants/{id}/menu-items` and `GET /restaurants/{id}/menu-items`
+- [x] Relationships: Restaurant → Dishes, Order → Dishes
+- [x] PUT endpoints for Restaurant and Dish
+- [x] Separate response DTOs from request DTOs
+- [x] Negative price validation on Dish
+- [x] Prevent ordering non-existent dishes
+- [x] `POST /restaurants/{id}/dishes` and `GET /restaurants/{id}/dishes`
 
 ### Level 2 — Business Logic
 - [ ] `createdAt` and `updatedAt` timestamps on Order
@@ -150,7 +174,7 @@ POST /orders
 - [ ] Custom `ResourceNotFoundException`
 - [ ] Prevent deletion of restaurants with active orders
 - [ ] `GET /orders?status=` filter by status
-- [ ] `GET /menu-items?category=` filter by category
+- [ ] `GET /dishes?category=` filter by category
 
 ### Level 3 — Production Ready
 - [ ] Spring Security + JWT (login and registration)
