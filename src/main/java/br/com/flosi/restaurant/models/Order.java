@@ -3,8 +3,11 @@ package br.com.flosi.restaurant.models;
 import br.com.flosi.restaurant.models.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -18,6 +21,10 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
     private BigDecimal total;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     @ManyToMany
     @JoinTable(
