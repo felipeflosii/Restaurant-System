@@ -7,13 +7,17 @@ import java.math.BigDecimal;
 @Data
 @Entity
 @Table(name = "menu_items")
-public class MenuItem {
+public class Dish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
     @Enumerated(EnumType.STRING)
-    private MenuCategory category;
+    private DishCategory category;
     private BigDecimal price;
+
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
 }
