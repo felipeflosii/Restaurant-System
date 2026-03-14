@@ -22,6 +22,7 @@ REST API for restaurant order management, built with Java and Spring Boot. The p
 ---
 
 ## Project Structure
+
 ```
 src/main/java/br/com/flosi/restaurant/
 ├── controllers/        REST controllers (HTTP layer)
@@ -105,6 +106,7 @@ src/main/java/br/com/flosi/restaurant/
 - Docker Desktop installed and running
 
 ### Run with Docker
+
 ```bash
 git clone https://github.com/felipeflosii/RestaurantSystem.git
 cd RestaurantSystem
@@ -114,6 +116,7 @@ docker compose up --build
 The API starts on `http://localhost:8080`. The PostgreSQL database is automatically provisioned by Docker Compose — no external database setup required.
 
 ### Run Locally (without Docker)
+
 ```bash
 # Requires Java 21 and a running PostgreSQL instance
 git clone https://github.com/felipeflosii/RestaurantSystem.git
@@ -123,16 +126,16 @@ cd RestaurantSystem
 
 ---
 
-### Example Requests
+## Example Requests
 
 **Create a restaurant:**
 ```json
 POST /restaurants
 
 {
-  "name": "Bella Italia",
-  "address": "123 Main St",
-  "specialty": "ITALIAN"
+  "name": "Restaurante Lar Nobres",
+  "address": "Rua Conceição, 292",
+  "specialty": "STEAKHOUSE"
 }
 ```
 
@@ -141,10 +144,10 @@ POST /restaurants
 POST /restaurants/1/dishes
 
 {
-  "name": "Margherita Pizza",
-  "description": "Classic tomato, mozzarella, and basil.",
-  "category": "PIZZA",
-  "price": 42.90
+  "name": "Picanha na Brasa",
+  "description": "Picanha grelhada na brasa com acompanhamento de farofa e vinagrete.",
+  "category": "GRILL",
+  "price": 89.90
 }
 ```
 
@@ -153,10 +156,29 @@ POST /restaurants/1/dishes
 POST /orders
 
 {
-  "customerName": "John Doe",
-  "dishIds": [1, 3, 5]
+  "name": "Carlos Silva",
+  "dishIds": [1, 2]
 }
 ```
+
+---
+
+## API in Action
+
+**POST /restaurants — Create a restaurant**
+![POST Restaurant](docs/screenshots/post-restaurant.png)
+
+**POST /restaurants/{id}/dishes — Create a dish linked to a restaurant**
+![POST Restaurant Dishes](docs/screenshots/post-restaurant-dishes.png)
+
+**GET /restaurants/{id}/dishes — List all dishes of a restaurant**
+![GET Restaurant Dishes](docs/screenshots/get-restaurant-dishes.png)
+
+**POST /orders — Create an order with auto-calculated total**
+![POST Order](docs/screenshots/post-order.png)
+
+**POST /orders — Error handling for non-existent dish**
+![POST Order Error](docs/screenshots/post-order-error.png)
 
 ---
 
@@ -188,9 +210,8 @@ POST /orders
 - [ ] Spring Security + JWT (login and registration)
 - [ ] Protected routes
 - [ ] Database migrations with Flyway
-- [x] Dockerfile 
-- [x] Docker Compose with app + database services 
+- [ ] Dockerfile ✅
+- [ ] Docker Compose with app + database services ✅
 
 ### Future
 - [ ] React frontend consuming the API
-
