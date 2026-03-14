@@ -11,5 +11,5 @@ public class OrderDTO {
     @NotBlank (message = "Required client name")
     private String name;
 
-    private List<Long> menuItemIds;
+    private List<Long> dishIds;
 }
