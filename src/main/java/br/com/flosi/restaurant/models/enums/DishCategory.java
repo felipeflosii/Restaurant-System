@@ -1,4 +1,4 @@
-package br.com.flosi.restaurant.models;
+package br.com.flosi.restaurant.models.enums;
 
 public enum DishCategory {
 
