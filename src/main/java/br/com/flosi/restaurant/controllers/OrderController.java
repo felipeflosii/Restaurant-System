@@ -1,7 +1,7 @@
 package br.com.flosi.restaurant.controllers;
 
 import br.com.flosi.restaurant.dtos.OrderDTO;
-import br.com.flosi.restaurant.models.Order;
+import br.com.flosi.restaurant.dtos.OrderResponseDTO;
 import br.com.flosi.restaurant.services.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,17 +18,17 @@ public class OrderController {
     private final OrderService service;
 
     @PostMapping
-    public ResponseEntity<Order> create(@RequestBody @Valid OrderDTO dto) {
+    public ResponseEntity<OrderResponseDTO> create(@RequestBody @Valid OrderDTO dto) {
         return ResponseEntity.status(201).body(service.save(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> getAll() {
+    public ResponseEntity<List<OrderResponseDTO>> getAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getById(@PathVariable Long id) {
+    public ResponseEntity<OrderResponseDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 

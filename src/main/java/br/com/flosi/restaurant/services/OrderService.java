@@ -1,6 +1,8 @@
 package br.com.flosi.restaurant.services;
 
+import br.com.flosi.restaurant.dtos.DishResponseDTO;
 import br.com.flosi.restaurant.dtos.OrderDTO;
+import br.com.flosi.restaurant.dtos.OrderResponseDTO;
 import br.com.flosi.restaurant.models.Dish;
 import br.com.flosi.restaurant.models.Order;
 import br.com.flosi.restaurant.models.OrderStatus;
@@ -19,7 +21,7 @@ public class OrderService {
     private final OrderRepository repository;
     private final DishRepository dishRepository;
 
-    public Order save(OrderDTO dto) {
+    public OrderResponseDTO save(OrderDTO dto) {
         Order order = new Order();
         order.setCostumerName(dto.getName());
         order.setStatus(OrderStatus.CREATED);
@@ -36,18 +38,47 @@ public class OrderService {
 
         order.setTotal(total);
         order.setDishes(dishes);
-        return repository.save(order);
+        repository.save(order);
+
+        return toResponse(order);
     }
 
-    public List<Order> findAll() {
-        return repository.findAll();
+    public List<OrderResponseDTO> findAll() {
+        return repository.findAll().stream()
+                .map(this::toResponse)
+                .toList();
     }
 
-    public Order findById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+    public OrderResponseDTO findById(Long id) {
+        Order order = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        return toResponse(order);
     }
 
-    public void delete (Long id) {
+    public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    private OrderResponseDTO toResponse(Order order) {
+        OrderResponseDTO response = new OrderResponseDTO();
+        response.setId(order.getId());
+        response.setCustomerName(order.getCostumerName());
+        response.setStatus(order.getStatus());
+        response.setTotal(order.getTotal());
+
+        List<DishResponseDTO> dishResponses = order.getDishes().stream()
+                .map(dish -> {
+                    DishResponseDTO dishResponse = new DishResponseDTO();
+                    dishResponse.setId(dish.getId());
+                    dishResponse.setName(dish.getName());
+                    dishResponse.setDescription(dish.getDescription());
+                    dishResponse.setCategory(dish.getCategory());
+                    dishResponse.setPrice(dish.getPrice());
+                    return dishResponse;
+                })
+                .toList();
+
+        response.setDishes(dishResponses);
+        return response;
     }
 }
