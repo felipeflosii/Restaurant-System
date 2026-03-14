@@ -1,12 +1,15 @@
 package br.com.flosi.restaurant.services;
 
 import br.com.flosi.restaurant.dtos.OrderDTO;
+import br.com.flosi.restaurant.models.MenuItem;
 import br.com.flosi.restaurant.models.Order;
 import br.com.flosi.restaurant.models.OrderStatus;
+import br.com.flosi.restaurant.repositories.MenuItemRepository;
 import br.com.flosi.restaurant.repositories.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -14,11 +17,20 @@ import java.util.List;
 public class OrderService {
 
     private final OrderRepository repository;
+    private final MenuItemRepository menuItemRepository;
 
     public Order save(OrderDTO dto) {
         Order order = new Order();
         order.setCostumerName(dto.getName());
         order.setStatus(OrderStatus.CREATED);
+
+        List<MenuItem> items = menuItemRepository.findAllById(dto.getMenuItemIds());
+
+        BigDecimal total = items.stream()
+                .map(MenuItem::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        order.setTotal(total);
         return repository.save(order);
     }
 

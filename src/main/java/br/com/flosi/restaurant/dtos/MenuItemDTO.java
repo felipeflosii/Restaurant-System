@@ -21,3 +21,10 @@ public class MenuItemDTO {
     @NotNull(message = "Price is required")
     private BigDecimal price;
 }
+
+// {
+//    "name": "4 queijos",
+//    "description": "Acmpanha queijo mussarela, cheedar, parmesão e gorgonzola.",
+//    "category": "PIZZA",
+//    "price": 70.00
+//}

@@ -3,6 +3,8 @@ package br.com.flosi.restaurant.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @Entity
 @Table(name = "orders")
@@ -13,4 +15,5 @@ public class Order {
     private String costumerName;
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
+    private BigDecimal total;
 }

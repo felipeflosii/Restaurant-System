@@ -3,10 +3,12 @@ package br.com.flosi.restaurant.controllers;
 import br.com.flosi.restaurant.dtos.MenuItemDTO;
 import br.com.flosi.restaurant.models.MenuItem;
 import br.com.flosi.restaurant.services.MenuItemService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -17,7 +19,7 @@ public class MenuItemController {
     private final MenuItemService service;
 
     @PostMapping
-    public ResponseEntity<MenuItem> create(@RequestBody MenuItemDTO dto) {
+    public ResponseEntity<MenuItem> create(@RequestBody @Valid MenuItemDTO dto) {
         return ResponseEntity.status(201).body(service.save(dto));
     }
 

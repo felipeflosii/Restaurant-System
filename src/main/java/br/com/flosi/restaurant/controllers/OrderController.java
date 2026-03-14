@@ -3,6 +3,7 @@ package br.com.flosi.restaurant.controllers;
 import br.com.flosi.restaurant.dtos.OrderDTO;
 import br.com.flosi.restaurant.models.Order;
 import br.com.flosi.restaurant.services.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class OrderController {
     private final OrderService service;
 
     @PostMapping
-    public ResponseEntity<Order> create(@RequestBody OrderDTO dto) {
+    public ResponseEntity<Order> create(@RequestBody @Valid OrderDTO dto) {
         return ResponseEntity.status(201).body(service.save(dto));
     }
 
