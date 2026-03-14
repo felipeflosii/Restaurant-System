@@ -1,7 +1,7 @@
 package br.com.flosi.restaurant.controllers;
 
 import br.com.flosi.restaurant.dtos.DishDTO;
-import br.com.flosi.restaurant.models.Dish;
+import br.com.flosi.restaurant.dtos.DishResponseDTO;
 import br.com.flosi.restaurant.services.DishService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,28 +12,28 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/menu-items")
+@RequestMapping("/dishes")
 public class DishController {
 
     private final DishService service;
 
     @PostMapping
-    public ResponseEntity<Dish> create(@RequestBody @Valid DishDTO dto) {
+    public ResponseEntity<DishResponseDTO> create(@RequestBody @Valid DishDTO dto) {
         return ResponseEntity.status(201).body(service.save(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<Dish>> getAll() {
+    public ResponseEntity<List<DishResponseDTO>> getAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Dish> getById(@PathVariable Long id) {
+    public ResponseEntity<DishResponseDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @PutMapping
-    public ResponseEntity<Dish> update(@PathVariable Long id, @RequestBody @Valid DishDTO dto) {
+    @PutMapping("/{id}")
+    public ResponseEntity<DishResponseDTO> update(@PathVariable Long id, @RequestBody @Valid DishDTO dto) {
         return ResponseEntity.ok(service.update(id, dto));
     }
 
