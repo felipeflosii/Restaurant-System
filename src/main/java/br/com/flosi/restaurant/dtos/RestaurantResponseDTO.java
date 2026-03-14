@@ -1,12 +1,12 @@
 package br.com.flosi.restaurant.dtos;
 
 import br.com.flosi.restaurant.models.RestaurantSpecialty;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class RestaurantResponseDTO {
 
-    private String id;
+    private Long id;
     private String name;
     private String address;
     private RestaurantSpecialty specialty;
