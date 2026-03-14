@@ -1,12 +1,11 @@
 package br.com.flosi.restaurant.services;
 
 import br.com.flosi.restaurant.dtos.RestaurantDTO;
+import br.com.flosi.restaurant.dtos.RestaurantResponseDTO;
 import br.com.flosi.restaurant.models.Restaurant;
 import br.com.flosi.restaurant.repositories.RestaurantRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -16,29 +15,60 @@ public class RestaurantService {
 
     private final RestaurantRepository repository;
 
-    public Restaurant save(RestaurantDTO dto) {
+    public RestaurantResponseDTO save(RestaurantDTO dto) {
         Restaurant restaurant = new Restaurant();
         restaurant.setName(dto.getName());
         restaurant.setAddress(dto.getAddress());
         restaurant.setSpecialty(dto.getSpecialty());
-        return repository.save(restaurant);
+        repository.save(restaurant); // salva sem retornar
+
+        RestaurantResponseDTO response = new RestaurantResponseDTO();
+        response.setId(restaurant.getId());
+        response.setName(restaurant.getName());
+        response.setAddress(restaurant.getAddress());
+        response.setSpecialty(restaurant.getSpecialty());
+        return response;
     }
 
-    public List<Restaurant> findAll() {
-        return repository.findAll();
+    public List<RestaurantResponseDTO> findAll() {
+        return repository.findAll().stream()
+                .map(restaurant -> {
+                    RestaurantResponseDTO response = new RestaurantResponseDTO();
+                    response.setId(restaurant.getId());
+                    response.setName(restaurant.getName());
+                    response.setAddress(restaurant.getAddress());
+                    response.setSpecialty(restaurant.getSpecialty());
+                    return response;
+                })
+                .toList();
     }
 
-    public Restaurant findById(Long id) {
-        return repository.findById(id)
+    public RestaurantResponseDTO findById(Long id) {
+        Restaurant restaurant = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+
+        RestaurantResponseDTO response = new RestaurantResponseDTO();
+        response.setId(restaurant.getId());
+        response.setName(restaurant.getName());
+        response.setAddress(restaurant.getAddress());
+        response.setSpecialty(restaurant.getSpecialty());
+        return response;
     }
 
-    public Restaurant update(Long id, RestaurantDTO dto) {
-        Restaurant restaurant = findById(id);
+    public RestaurantResponseDTO update(Long id, RestaurantDTO dto) {
+        Restaurant restaurant = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
         restaurant.setName(dto.getName());
         restaurant.setAddress(dto.getAddress());
         restaurant.setSpecialty(dto.getSpecialty());
-        return repository.save(restaurant);
+        repository.save(restaurant);
+
+        RestaurantResponseDTO response = new RestaurantResponseDTO();
+        response.setId(restaurant.getId());
+        response.setName(restaurant.getName());
+        response.setAddress(restaurant.getAddress());
+        response.setSpecialty(restaurant.getSpecialty());
+        return response;
     }
 
     public void delete(Long id) {

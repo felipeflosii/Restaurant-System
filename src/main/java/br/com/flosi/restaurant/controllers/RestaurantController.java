@@ -1,7 +1,7 @@
 package br.com.flosi.restaurant.controllers;
 
 import br.com.flosi.restaurant.dtos.RestaurantDTO;
-import br.com.flosi.restaurant.models.Restaurant;
+import br.com.flosi.restaurant.dtos.RestaurantResponseDTO;
 import br.com.flosi.restaurant.services.RestaurantService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,22 +18,22 @@ public class RestaurantController {
     private final RestaurantService service;
 
     @PostMapping
-    public ResponseEntity<Restaurant> create(@RequestBody @Valid RestaurantDTO dto) {
+    public ResponseEntity<RestaurantResponseDTO> create(@RequestBody @Valid RestaurantDTO dto) {
         return ResponseEntity.status(201).body(service.save(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<Restaurant>> getAll() {
+    public ResponseEntity<List<RestaurantResponseDTO>> getAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Restaurant> getById(@PathVariable Long id) {
+    public ResponseEntity<RestaurantResponseDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Restaurant> update(@PathVariable Long id, @RequestBody @Valid RestaurantDTO dto) {
+    public ResponseEntity<RestaurantResponseDTO> update(@PathVariable Long id, @RequestBody @Valid RestaurantDTO dto) {
         return ResponseEntity.ok(service.update(id, dto));
     }
 
