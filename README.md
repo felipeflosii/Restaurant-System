@@ -11,18 +11,17 @@ REST API for restaurant order management, built with Java and Spring Boot. The p
 | Language | Java 21 |
 | Framework | Spring Boot 4.0.3 |
 | Persistence | Spring Data JPA + Hibernate |
-| Database | H2 (development) → PostgreSQL (production) |
+| Database | PostgreSQL 16 |
 | Migrations | Flyway (planned — Level 3) |
 | Validation | Jakarta Validation (Bean Validation) |
 | Security | Spring Security + JWT (planned — Level 3) |
 | Boilerplate | Lombok |
 | Build Tool | Maven 3.9.12 |
-| Containerization | Docker + Docker Compose (planned — Level 3) |
+| Containerization | Docker + Docker Compose |
 
 ---
 
 ## Project Structure
-
 ```
 src/main/java/br/com/flosi/restaurant/
 ├── controllers/        REST controllers (HTTP layer)
@@ -103,18 +102,26 @@ src/main/java/br/com/flosi/restaurant/
 
 ### Prerequisites
 
-- Java 21 or higher
-- Maven 3.9+ (or use the included `mvnw` wrapper)
+- Docker Desktop installed and running
 
-### Run Locally
-
+### Run with Docker
 ```bash
+git clone https://github.com/felipeflosii/RestaurantSystem.git
+cd RestaurantSystem
+docker compose up --build
+```
+
+The API starts on `http://localhost:8080`. The PostgreSQL database is automatically provisioned by Docker Compose — no external database setup required.
+
+### Run Locally (without Docker)
+```bash
+# Requires Java 21 and a running PostgreSQL instance
 git clone https://github.com/felipeflosii/RestaurantSystem.git
 cd RestaurantSystem
 ./mvnw spring-boot:run
 ```
 
-The API starts on `http://localhost:8080`. The H2 in-memory database is pre-configured — no external database setup required for development.
+---
 
 ### Example Requests
 
@@ -167,6 +174,7 @@ POST /orders
 - [x] Negative price validation on Dish
 - [x] Prevent ordering non-existent dishes
 - [x] `POST /restaurants/{id}/dishes` and `GET /restaurants/{id}/dishes`
+- [x] Docker + Docker Compose with PostgreSQL
 
 ### Level 2 — Business Logic
 - [ ] `createdAt` and `updatedAt` timestamps on Order
@@ -179,10 +187,9 @@ POST /orders
 ### Level 3 — Production Ready
 - [ ] Spring Security + JWT (login and registration)
 - [ ] Protected routes
-- [ ] Swap H2 for PostgreSQL
 - [ ] Database migrations with Flyway
-- [ ] Dockerfile
-- [ ] Docker Compose with app + database services
+- [x] Dockerfile 
+- [x] Docker Compose with app + database services 
 
 ### Future
 - [ ] React frontend consuming the API
