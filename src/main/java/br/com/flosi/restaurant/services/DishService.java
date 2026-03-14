@@ -32,6 +32,15 @@ public class DishService {
                 .orElseThrow(() -> new RuntimeException("Dishes not found"));
     }
 
+    public Dish update(Long id, DishDTO dto) {
+        Dish dishes = findById(id);
+        dishes.setName(dto.getName());
+        dishes.setDescription(dto.getDescription());
+        dishes.setCategory(dto.getCategory());
+        dishes.setPrice(dto.getPrice());
+        return repository.save(dishes);
+    }
+
     public void delete(Long id) {
         repository.deleteById(id);
     }

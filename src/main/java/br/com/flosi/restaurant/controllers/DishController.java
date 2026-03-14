@@ -32,6 +32,11 @@ public class DishController {
         return ResponseEntity.ok(service.findById(id));
     }
 
+    @PutMapping
+    public ResponseEntity<Dish> update(@PathVariable Long id, @RequestBody @Valid DishDTO dto) {
+        return ResponseEntity.ok(service.update(id, dto));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
