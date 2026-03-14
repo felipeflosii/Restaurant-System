@@ -41,6 +41,7 @@ CYGWIN* | MINGW*)
   ;;
 esac
 
+
 # set JAVACMD and JAVACCMD
 set_java_home() {
   # For Cygwin and MinGW, ensure paths are in Unix format before anything is touched
