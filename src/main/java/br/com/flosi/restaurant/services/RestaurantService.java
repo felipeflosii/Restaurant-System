@@ -3,6 +3,7 @@ package br.com.flosi.restaurant.services;
 import br.com.flosi.restaurant.dtos.DishResponseDTO;
 import br.com.flosi.restaurant.dtos.RestaurantDTO;
 import br.com.flosi.restaurant.dtos.RestaurantResponseDTO;
+import br.com.flosi.restaurant.exceptions.ResourceNotFoundException;
 import br.com.flosi.restaurant.models.Restaurant;
 import br.com.flosi.restaurant.repositories.DishRepository;
 import br.com.flosi.restaurant.repositories.RestaurantRepository;
@@ -23,7 +24,7 @@ public class RestaurantService {
         restaurant.setName(dto.getName());
         restaurant.setAddress(dto.getAddress());
         restaurant.setSpecialty(dto.getSpecialty());
-        repository.save(restaurant); // salva sem retornar
+        repository.save(restaurant);
 
         RestaurantResponseDTO response = new RestaurantResponseDTO();
         response.setId(restaurant.getId());
@@ -48,7 +49,7 @@ public class RestaurantService {
 
     public RestaurantResponseDTO findById(Long id) {
         Restaurant restaurant = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant", id));
 
         RestaurantResponseDTO response = new RestaurantResponseDTO();
         response.setId(restaurant.getId());
@@ -60,7 +61,7 @@ public class RestaurantService {
 
     public RestaurantResponseDTO update(Long id, RestaurantDTO dto) {
         Restaurant restaurant = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant", id));
         restaurant.setName(dto.getName());
         restaurant.setAddress(dto.getAddress());
         restaurant.setSpecialty(dto.getSpecialty());

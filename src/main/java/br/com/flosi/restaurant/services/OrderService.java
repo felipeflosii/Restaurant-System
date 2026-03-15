@@ -3,6 +3,7 @@ package br.com.flosi.restaurant.services;
 import br.com.flosi.restaurant.dtos.DishResponseDTO;
 import br.com.flosi.restaurant.dtos.OrderDTO;
 import br.com.flosi.restaurant.dtos.OrderResponseDTO;
+import br.com.flosi.restaurant.exceptions.ResourceNotFoundException;
 import br.com.flosi.restaurant.models.Dish;
 import br.com.flosi.restaurant.models.Order;
 import br.com.flosi.restaurant.models.enums.OrderStatus;
@@ -51,7 +52,7 @@ public class OrderService {
 
     public OrderResponseDTO findById(Long id) {
         Order order = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant", id));
         return toResponse(order);
     }
 
