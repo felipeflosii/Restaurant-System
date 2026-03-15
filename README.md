@@ -14,7 +14,7 @@ REST API for restaurant order management, built with Java and Spring Boot. The p
 | Database | PostgreSQL 16 |
 | Migrations | Flyway (planned — Level 3) |
 | Validation | Jakarta Validation (Bean Validation) |
-| Security | Spring Security + JWT (planned — Level 3) |
+| Security | Spring Security + JWT |
 | Boilerplate | Lombok |
 | Build Tool | Maven 3.9.12 |
 | Containerization | Docker + Docker Compose |
@@ -29,10 +29,10 @@ src/main/java/br/com/flosi/restaurant/
 ├── services/           Business logic layer
 ├── repositories/       Spring Data JPA interfaces
 ├── models/             JPA entities
-│   └── enums/          Domain enums (DishCategory, OrderStatus, RestaurantSpecialty)
+│   └── enums/          Domain enums (DishCategory, OrderStatus, RestaurantSpecialty, UserRole)
 ├── dtos/               Data Transfer Objects (request/response)
 ├── exceptions/         Global exception handling
-└── security/           Spring Security + JWT (planned)
+└── security/           Spring Security + JWT (JwtService, JwtAuthFilter, AuthService, SecurityConfig)
 ```
 
 ---
@@ -46,6 +46,7 @@ src/main/java/br/com/flosi/restaurant/
 | Restaurant | Represents a restaurant with name, address, and specialty |
 | Dish | A dish offered by a restaurant with name, description, category, and price |
 | Order | A customer order linked to dishes, with an auto-calculated total and lifecycle status |
+| User | A system user with email, password, and role-based access |
 
 ### Relationships
 
@@ -61,10 +62,18 @@ src/main/java/br/com/flosi/restaurant/
 | DishCategory | `APPETIZER`, `SOUP`, `SALAD`, `MAIN_COURSE`, `PIZZA`, `PASTA`, `SEAFOOD`, `GRILL`, `VEGETARIAN`, `VEGAN`, `DESSERT`, `BEVERAGE`, `COMBO`, `SPECIAL`, and more |
 | OrderStatus | `CREATED` → `CONFIRMED` → `PREPARING` → `READY` → `OUT_FOR_DELIVERY` → `DELIVERED` / `CANCELLED` / `PAID` |
 | RestaurantSpecialty | `ITALIAN`, `JAPANESE`, `BRAZILIAN`, `MEXICAN`, `CHINESE`, `AMERICAN`, `FRENCH`, `MEDITERRANEAN`, `SEAFOOD`, `VEGETARIAN`, `VEGAN`, `FAST_FOOD`, `PIZZA`, `STEAKHOUSE`, `BAKERY`, `CAFE`, `BUFFET`, `FUSION` |
+| UserRole | `WAITER`, `KITCHEN`, `CASHIER`, `MANAGER` |
 
 ---
 
 ## API Endpoints
+
+### Auth — `/auth`
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/auth/register` | Register a new user |
+| POST | `/auth/login` | Authenticate and receive a JWT token |
 
 ### Restaurants — `/restaurants`
 
@@ -97,6 +106,8 @@ src/main/java/br/com/flosi/restaurant/
 | POST | `/orders` | Create a new order (total auto-calculated) |
 | DELETE | `/orders/{id}` | Delete an order |
 
+> All endpoints except `/auth/**` require a valid JWT token in the `Authorization: Bearer <token>` header.
+
 ---
 
 ## Getting Started
@@ -127,6 +138,28 @@ cd RestaurantSystem
 ---
 
 ## Example Requests
+
+**Register a user:**
+```json
+POST /auth/register
+
+{
+  "name": "Felipe",
+  "email": "felipe@email.com",
+  "password": "123456",
+  "role": "MANAGER"
+}
+```
+
+**Login:**
+```json
+POST /auth/login
+
+{
+  "email": "felipe@email.com",
+  "password": "123456"
+}
+```
 
 **Create a restaurant:**
 ```json
@@ -184,12 +217,13 @@ POST /orders
 
 ## Development Roadmap
 
-### Level 1 — Foundation ✅
+### Level 1 — Foundation (in progress)
 - [x] Basic CRUD for Restaurant, Dish, and Order
 - [x] Auto-calculated order total from dish prices
 - [x] Status automatically set to `CREATED` on order creation
 - [x] DTOs with validation via `@Valid`
 - [x] Global exception handler
+- [x] ResourceNotFoundException
 - [x] Relationships: Restaurant → Dishes, Order → Dishes
 - [x] PUT endpoints for Restaurant and Dish
 - [x] Separate response DTOs from request DTOs
@@ -197,21 +231,38 @@ POST /orders
 - [x] Prevent ordering non-existent dishes
 - [x] `POST /restaurants/{id}/dishes` and `GET /restaurants/{id}/dishes`
 - [x] Docker + Docker Compose with PostgreSQL
+- [x] Spring Security + JWT (login and registration)
+- [x] User entity with role-based access (WAITER, KITCHEN, CASHIER, MANAGER)
+- [x] Protected routes — all endpoints except `/auth/**` require JWT
+- [ ] Profiles dev/prod
+- [ ] RestaurantTable entity
+- [ ] TableSession entity
+- [ ] Refactor Order → TableSession
+- [ ] OrderItem entity with destination enum (KITCHEN | BAR)
 
 ### Level 2 — Business Logic
 - [ ] `createdAt` and `updatedAt` timestamps on Order
 - [ ] `PATCH /orders/{id}/status` with forward-only status transition validation
-- [ ] Custom `ResourceNotFoundException`
+- [ ] Order queue with `queuePosition`
+- [ ] Queue reordering by MANAGER role
+- [ ] Queue visual status (next, position N, completed)
+- [ ] Consolidated table bill via TableSession
+- [ ] Independent status for food and drinks
+- [ ] Cancel/edit order by role
 - [ ] Prevent deletion of restaurants with active orders
 - [ ] `GET /orders?status=` filter by status
 - [ ] `GET /dishes?category=` filter by category
 
 ### Level 3 — Production Ready
-- [ ] Spring Security + JWT (login and registration)
-- [ ] Protected routes
 - [ ] Database migrations with Flyway
-- [ ] Dockerfile ✅
-- [ ] Docker Compose with app + database services ✅
+- [ ] Environment variable configuration for Docker Compose
+- [ ] Integration tests
 
 ### Future
 - [ ] React frontend consuming the API
+- [ ] WebSocket for real-time order queue updates
+- [ ] Reports and metrics
+- [ ] Push notifications
+- [ ] Payment integration
+- [ ] QR code menu per table
+- [ ] Multi-tenant support
