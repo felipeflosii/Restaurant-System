@@ -1,11 +1,9 @@
 package br.com.flosi.restaurant.controllers;
 
-import br.com.flosi.restaurant.dtos.DishDTO;
-import br.com.flosi.restaurant.dtos.DishResponseDTO;
-import br.com.flosi.restaurant.dtos.RestaurantDTO;
-import br.com.flosi.restaurant.dtos.RestaurantResponseDTO;
+import br.com.flosi.restaurant.dtos.*;
 import br.com.flosi.restaurant.services.DishService;
 import br.com.flosi.restaurant.services.RestaurantService;
+import br.com.flosi.restaurant.services.RestaurantTableService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +17,7 @@ import java.util.List;
 public class RestaurantController {
 
     private final RestaurantService service;
+    private final RestaurantTableService restaurantTableService;
     private final DishService dishService;
 
     @PostMapping
@@ -56,5 +55,16 @@ public class RestaurantController {
     @GetMapping("/{id}/dishes")
     public ResponseEntity<List<DishResponseDTO>> getDishes(@PathVariable Long id) {
         return ResponseEntity.ok(service.findDishesByRestaurantId(id));
+    }
+
+    // HTTP restaurant - tables
+    @PostMapping("/{id}/tables")
+    public ResponseEntity<RestaurantTableResponseDTO> createRestaurantTable(@PathVariable Long id, @RequestBody @Valid RestaurantTableDTO dto) {
+        return ResponseEntity.status(201).body(restaurantTableService.saveByRestaurant(id, dto));
+    }
+
+    @GetMapping("/{id}/tables")
+    public ResponseEntity<List<RestaurantTableResponseDTO>> getRestaurantTables(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findRestaurantTablesByRestaurantId(id));
     }
 }

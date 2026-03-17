@@ -3,10 +3,12 @@ package br.com.flosi.restaurant.services;
 import br.com.flosi.restaurant.dtos.DishResponseDTO;
 import br.com.flosi.restaurant.dtos.RestaurantDTO;
 import br.com.flosi.restaurant.dtos.RestaurantResponseDTO;
+import br.com.flosi.restaurant.dtos.RestaurantTableResponseDTO;
 import br.com.flosi.restaurant.exceptions.ResourceNotFoundException;
 import br.com.flosi.restaurant.models.Restaurant;
 import br.com.flosi.restaurant.repositories.DishRepository;
 import br.com.flosi.restaurant.repositories.RestaurantRepository;
+import br.com.flosi.restaurant.repositories.RestaurantTableRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ public class RestaurantService {
 
     private final RestaurantRepository repository;
     private final DishRepository dishRepository;
+    private final RestaurantTableRepository restaurantTableRepository;
 
     public RestaurantResponseDTO save(RestaurantDTO dto) {
         Restaurant restaurant = new Restaurant();
@@ -87,6 +90,18 @@ public class RestaurantService {
                     return response;
                 })
                 .toList();
+    }
+
+    public List<RestaurantTableResponseDTO> findRestaurantTablesByRestaurantId(Long restaurantId) {
+        return restaurantTableRepository.findByRestaurantId(restaurantId).stream()
+            .map(restaurantTable -> {
+                RestaurantTableResponseDTO response = new RestaurantTableResponseDTO();
+                response.setId(restaurantTable.getId());
+                response.setTableNumber(restaurantTable.getTableNumber());
+                response.setTableCapacity(restaurantTable.getTableCapacity());
+                return response;
+            })
+            .toList();
     }
 
     public void delete(Long id) {
