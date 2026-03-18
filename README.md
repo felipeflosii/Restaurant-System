@@ -46,6 +46,7 @@ src/main/java/br/com/flosi/restaurant/
 | Restaurant | Represents a restaurant with name, address, and specialty |
 | Dish | A dish offered by a restaurant with name, description, category, and price |
 | Order | A customer order linked to dishes, with an auto-calculated total and lifecycle status |
+| RestaurantTable | A physical table in a restaurant with a number and seating capacity |
 | User | A system user with email, password, and role-based access |
 
 ### Relationships
@@ -53,16 +54,17 @@ src/main/java/br/com/flosi/restaurant/
 | Relationship | Type |
 |---|---|
 | Restaurant → Dish | One-to-Many |
+| Restaurant → RestaurantTable | One-to-Many |
 | Order → Dish | Many-to-Many (via `order_items` table) |
 
 ### Enums
 
 | Enum | Values |
 |---|---|
-| DishCategory | `APPETIZER`, `SOUP`, `SALAD`, `MAIN_COURSE`, `PIZZA`, `PASTA`, `SEAFOOD`, `GRILL`, `VEGETARIAN`, `VEGAN`, `DESSERT`, `BEVERAGE`, `COMBO`, `SPECIAL`, and more |
+| DishCategory | `APPETIZER`, `SOUP`, `SALAD`, `MAIN_COURSE`, `SIDE_DISH`, `FAST_FOOD`, `PASTA`, `PIZZA`, `SEAFOOD`, `GRILL`, `VEGETARIAN`, `VEGAN`, `DESSERT`, `BAKERY`, `BEVERAGE`, `HOT_BEVERAGE`, `COLD_BEVERAGE`, `ALCOHOLIC_BEVERAGE`, `COMBO`, `SPECIAL` |
 | OrderStatus | `CREATED` → `CONFIRMED` → `PREPARING` → `READY` → `OUT_FOR_DELIVERY` → `DELIVERED` / `CANCELLED` / `PAID` |
 | RestaurantSpecialty | `ITALIAN`, `JAPANESE`, `BRAZILIAN`, `MEXICAN`, `CHINESE`, `AMERICAN`, `FRENCH`, `MEDITERRANEAN`, `SEAFOOD`, `VEGETARIAN`, `VEGAN`, `FAST_FOOD`, `PIZZA`, `STEAKHOUSE`, `BAKERY`, `CAFE`, `BUFFET`, `FUSION` |
-| UserRole | `WAITER`, `KITCHEN`, `CASHIER`, `MANAGER` |
+| UserRole | `WAITER`, `CASHIER`, `KITCHEN`, `BARTENDER`, `MANAGER` |
 
 ---
 
@@ -86,6 +88,8 @@ src/main/java/br/com/flosi/restaurant/
 | DELETE | `/restaurants/{id}` | Delete a restaurant |
 | GET | `/restaurants/{id}/dishes` | List all dishes of a restaurant |
 | POST | `/restaurants/{id}/dishes` | Create a dish linked to a restaurant |
+| GET | `/restaurants/{id}/tables` | List all tables of a restaurant |
+| POST | `/restaurants/{id}/tables` | Create a table linked to a restaurant |
 
 ### Dishes — `/dishes`
 
@@ -105,6 +109,16 @@ src/main/java/br/com/flosi/restaurant/
 | GET | `/orders/{id}` | Get an order by ID |
 | POST | `/orders` | Create a new order (total auto-calculated) |
 | DELETE | `/orders/{id}` | Delete an order |
+
+### Restaurant Tables — `/restaurant_tables`
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/restaurant_tables` | List all tables |
+| GET | `/restaurant_tables/{id}` | Get a table by ID |
+| POST | `/restaurant_tables` | Create a new table |
+| PUT | `/restaurant_tables/{id}` | Update a table |
+| DELETE | `/restaurant_tables/{id}` | Delete a table |
 
 > All endpoints except `/auth/**` require a valid JWT token in the `Authorization: Bearer <token>` header.
 
@@ -184,6 +198,16 @@ POST /restaurants/1/dishes
 }
 ```
 
+**Create a table linked to a restaurant:**
+```json
+POST /restaurants/1/tables
+
+{
+  "tableNumber": 1,
+  "tableCapacity": 4
+}
+```
+
 **Create an order:**
 ```json
 POST /orders
@@ -221,6 +245,7 @@ POST /orders
 - [x] Basic CRUD for Restaurant, Dish, and Order
 - [x] Auto-calculated order total from dish prices
 - [x] Status automatically set to `CREATED` on order creation
+- [x] `createdAt` and `updatedAt` timestamps on Order
 - [x] DTOs with validation via `@Valid`
 - [x] Global exception handler
 - [x] ResourceNotFoundException
@@ -232,16 +257,16 @@ POST /orders
 - [x] `POST /restaurants/{id}/dishes` and `GET /restaurants/{id}/dishes`
 - [x] Docker + Docker Compose with PostgreSQL
 - [x] Spring Security + JWT (login and registration)
-- [x] User entity with role-based access (WAITER, KITCHEN, CASHIER, MANAGER)
+- [x] User entity with role-based access (WAITER, KITCHEN, CASHIER, BARTENDER, MANAGER)
 - [x] Protected routes — all endpoints except `/auth/**` require JWT
+- [x] RestaurantTable entity with full CRUD
+- [x] `POST /restaurants/{id}/tables` and `GET /restaurants/{id}/tables`
 - [ ] Profiles dev/prod
-- [ ] RestaurantTable entity
 - [ ] TableSession entity
 - [ ] Refactor Order → TableSession
 - [ ] OrderItem entity with destination enum (KITCHEN | BAR)
 
 ### Level 2 — Business Logic
-- [ ] `createdAt` and `updatedAt` timestamps on Order
 - [ ] `PATCH /orders/{id}/status` with forward-only status transition validation
 - [ ] Order queue with `queuePosition`
 - [ ] Queue reordering by MANAGER role
